@@ -173,3 +173,19 @@ body {
     transition: opacity 0.8s ease;
     z-index: 10;
 }
+
+/* --- SEGUNDO CENÁRIO MUHEHEHEHE --- */
+#cena2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+#imagem-cena2 {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

@@ -11,6 +11,9 @@ const telaIntro = document.getElementById('tela-intro');
 const videoIntro = document.getElementById('video-intro');
 const btnPular = document.getElementById('btn-pular');
 const musicaFundo = document.getElementById('musica-fundo');
+const cena2 = document.getElementById('cena2');
+const textoFala = document.getElementById('texto-fala'); 
+//que baguio diabolico;-;
 
 let posX = 100;
 const velocidade = 8;
@@ -52,7 +55,7 @@ function finalizarIntro() {
     
     // Aumenta o volume da música quando o jogo começa
     if (musicaFundo) {
-        musicaFundo.volume = 0.5;
+        musicaFundo.volume = 0.1;
     }
     
     balaoFala.style.display = 'block';
@@ -107,20 +110,33 @@ function verificarColisaoPorta() {
         rectPersonagem.top <= rectPorta.bottom
     ) {
         saiuDoCenario = true;
-        transicao.style.opacity = '1';
+        transicao.style.opacity = '1'; // Escurece a tela
 
         setTimeout(() => {
+            // Troca os cenários
             fundoVideo.style.display = 'none';
-            cenario.style.backgroundColor = '#000';
-            personagem.style.display = 'none';
             porta.style.display = 'none';
+            cena2.style.display = 'block';
+
+            // personagem no canto esquerdo da nova cena
+            posX = 100;
+            personagem.style.left = posX + 'px';
+            personagem.style.transform = 'scaleX(1)'; // Garante que ela olhe para a direita
+            personagem.style.display = 'block';
+
+            //Clareia a tela e abre o novo balão de fala
+            transicao.style.opacity = '0';
+            
+            textoFala.innerText = "Que....lugar é esse??";
+            balaoFala.style.left = "150px"; // Posição do balão na nova cena
+            balaoFala.style.display = 'block';
+            emDialogo = true; //Trava a personagem até o jogador fechar o balão
         }, 800);
     }
 }
 
 function atualizarJogo() {
-    if (saiuDoCenario) return;
-
+    // Removemos a trava do saiuDoCenario aqui para ela poder andar no Cenário 2 também!
     if (!naIntroducao && !emDialogo) {
         const limiteEsquerdo = 0;
         const limiteDireito = cenario.clientWidth - personagem.clientWidth;
@@ -136,10 +152,13 @@ function atualizarJogo() {
         }
 
         personagem.style.left = posX + 'px';
-        verificarColisaoPorta();
+
+        // Só verifica a colisão com a porta enquanto ainda estiver no laboratório
+        if (!saiuDoCenario) {
+            verificarColisaoPorta();
+        }
     }
 
     requestAnimationFrame(atualizarJogo);
 }
-
 atualizarJogo();
