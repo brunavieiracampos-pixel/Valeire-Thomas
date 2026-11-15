@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valerie Thomas - Laboratório</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="cenario">
+        <!-- Tela inicial -->
+        <div id="tela-start">
+            <button id="btn-jogar">INICIAR JOGO</button>
+        </div>
+
+        <!-- Vídeo de Introdução -->
+        <div id="tela-intro">
+            <video id="video-intro" playsinline>
+                <source src="introducao.mp4" type="video/mp4">
+            </video>
+            <button id="btn-pular">Pular Introdução >></button>
+        </div>
+
+        <!-- Cenário do Laboratório -->
+        <video id="fundo-video" autoplay loop muted playsinline>
+            <source src="laboratorio123.mp4" type="video/mp4">
+        </video>
+
+        <div id="porta"></div>
+        <img id="personagem" src="personagem.png" alt="personagem">
+        
+        <div id="balao-fala" style="display: none;">
+            <p id="texto-fala">Preciso sair do laboratório...</p>
+            <span id="aviso-continuar">Pressione Espaço ou clique aqui para continuar</span>
+        </div>
+
+        <div id="transicao"></div>
+    </div>
+
+    <!-- Áudio de fundo -->
+    <audio id="musica-fundo" loop>
+        <source src="musica.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
