@@ -12,7 +12,7 @@ const videoIntro = document.getElementById('video-intro');
 const btnPular = document.getElementById('btn-pular');
 const musicaFundo = document.getElementById('musica-fundo');
 const cena2 = document.getElementById('cena2');
-const textoFala = document.getElementById('texto-fala');
+const textoFala = document.getElementById('texto-fala'); 
 //que baguio diabolico;-;
 
 let posX = 100;
@@ -23,92 +23,18 @@ let emDialogo = false;
 
 const teclas = {
     ArrowLeft: false,
-    ArrowRight: false,
+    ArrowRight: false, 
     a: false,
     d: false
 };
 
-// Controles invisíveis por toque
-let toqueEsquerda = false;
-let toqueDireita = false;
-
-// Identifica em qual metade da tela o jogador está tocando
-function atualizarDirecaoToque(touch) {
-    const rect = cenario.getBoundingClientRect();
-    const meioDaTela = rect.left + rect.width / 2;
-
-    toqueEsquerda = touch.clientX < meioDaTela;
-    toqueDireita = !toqueEsquerda;
-}
-
-// Para o movimento quando o dedo é retirado
-function limparToque() {
-    toqueEsquerda = false;
-    toqueDireita = false;
-}
-
-// Detecta o toque inicial na tela
-cenario.addEventListener('touchstart', (event) => {
-    // Não movimenta durante a introdução ou os diálogos
-    if (naIntroducao || emDialogo) {
-        limparToque();
-        return;
-    }
-
-    if (event.touches.length > 0) {
-        event.preventDefault();
-        atualizarDirecaoToque(event.touches[0]);
-    }
-}, { passive: false });
-
-// Permite mudar de direção deslizando o dedo
-cenario.addEventListener('touchmove', (event) => {
-    if (naIntroducao || emDialogo) {
-        limparToque();
-        return;
-    }
-
-    if (event.touches.length > 0) {
-        event.preventDefault();
-        atualizarDirecaoToque(event.touches[0]);
-    }
-}, { passive: false });
-
-// Para ou atualiza o movimento quando o toque termina
-cenario.addEventListener('touchend', (event) => {
-    if (event.touches.length > 0 && !naIntroducao && !emDialogo) {
-        atualizarDirecaoToque(event.touches[0]);
-    } else {
-        limparToque();
-    }
-});
-
-// Limpa o movimento caso o toque seja interrompido
-cenario.addEventListener('touchcancel', limparToque);
-
-// Tenta colocar o jogo em tela cheia e na orientação horizontal
-async function prepararTelaDoJogo() {
-    try {
-        if (cenario.requestFullscreen && !document.fullscreenElement) {
-            await cenario.requestFullscreen();
-        }
-
-        if (screen.orientation && screen.orientation.lock) {
-            await screen.orientation.lock('landscape');
-        }
-    } catch (erro) {
-        console.log('Não foi possível ativar a orientação horizontal:', erro);
-    }
-}
-
 // Clique único e limpo para iniciar vídeo e música
 btnJogar.addEventListener('click', () => {
-    prepararTelaDoJogo();
     telaStart.style.display = 'none';
 
     // Inicia a música de fundo mais baixa durante a introdução
     if (musicaFundo) {
-        musicaFundo.volume = 0.2;
+        musicaFundo.volume = 0.2; 
         musicaFundo.play().catch(() => {});
     }
 
@@ -126,15 +52,14 @@ function finalizarIntro() {
     naIntroducao = false;
     videoIntro.pause();
     telaIntro.style.display = 'none';
-
+    
     // Aumenta o volume da música quando o jogo começa
     if (musicaFundo) {
         musicaFundo.volume = 0.1;
     }
-
+    
     balaoFala.style.display = 'block';
     emDialogo = true;
-    limparToque();
 }
 
 videoIntro.addEventListener('ended', finalizarIntro);
@@ -144,7 +69,6 @@ function fecharDialogo() {
     if (!emDialogo) return;
     emDialogo = false;
     balaoFala.style.display = 'none';
-    limparToque();
 }
 
 balaoFala.addEventListener('click', fecharDialogo);
@@ -194,52 +118,42 @@ function verificarColisaoPorta() {
             porta.style.display = 'none';
             cena2.style.display = 'block';
 
-            // Personagem no canto esquerdo da nova cena
+            // personagem no canto esquerdo da nova cena
             posX = 100;
             personagem.style.left = posX + 'px';
-            personagem.style.transform = 'scaleX(1)';
+            personagem.style.transform = 'scaleX(1)'; // Garante que ela olhe para a direita
             personagem.style.display = 'block';
 
-            // Clareia a tela e abre o novo balão de fala
+            //Clareia a tela e abre o novo balão de fala
             transicao.style.opacity = '0';
-
+            
             textoFala.innerText = "Que....lugar é esse??";
-            balaoFala.style.left = "150px";
+            balaoFala.style.left = "150px"; // Posição do balão na nova cena
             balaoFala.style.display = 'block';
-            emDialogo = true;
-            limparToque();
+            emDialogo = true; //Trava a personagem até o jogador fechar o balão
         }, 800);
     }
 }
 
 function atualizarJogo() {
-    // A personagem só se movimenta quando está livre
+    //andar no Cenário 2 também!
     if (!naIntroducao && !emDialogo) {
         const limiteEsquerdo = 0;
         const limiteDireito = cenario.clientWidth - personagem.clientWidth;
 
-        // Verifica se o jogador está usando teclado ou toque
-        const indoParaEsquerda =
-            teclas.ArrowLeft || teclas.a || toqueEsquerda;
-
-        const indoParaDireita =
-            teclas.ArrowRight || teclas.d || toqueDireita;
-
-        if (indoParaEsquerda && posX > limiteEsquerdo) {
+        if ((teclas.ArrowLeft || teclas.a) && posX > limiteEsquerdo) {
             posX -= velocidade;
             personagem.style.transform = 'scaleX(-1)';
         }
 
-        if (indoParaDireita && posX < limiteDireito) {
+        if ((teclas.ArrowRight || teclas.d) && posX < limiteDireito) {
             posX += velocidade;
             personagem.style.transform = 'scaleX(1)';
         }
 
-        // Impede que a personagem ultrapasse os limites da tela
-        posX = Math.max(limiteEsquerdo, Math.min(posX, limiteDireito));
         personagem.style.left = posX + 'px';
 
-        // Só verifica a colisão com a porta enquanto ainda estiver no laboratório
+        // verifica a colisão com a porta enquanto ainda estiver no laboratório
         if (!saiuDoCenario) {
             verificarColisaoPorta();
         }
@@ -247,6 +161,4 @@ function atualizarJogo() {
 
     requestAnimationFrame(atualizarJogo);
 }
-
-atualizarJogo();;
-
+atualizarJogo();
