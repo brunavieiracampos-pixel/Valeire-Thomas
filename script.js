@@ -1,3 +1,4 @@
+
 const personagem = document.getElementById('personagem');
 const cenario = document.getElementById('cenario');
 const porta = document.getElementById('porta');
@@ -13,7 +14,6 @@ const btnPular = document.getElementById('btn-pular');
 const musicaFundo = document.getElementById('musica-fundo');
 const cena2 = document.getElementById('cena2');
 const textoFala = document.getElementById('texto-fala'); 
-//que baguio diabolico;-;
 
 let posX = 100;
 const velocidade = 8;
@@ -28,17 +28,31 @@ const teclas = {
     d: false
 };
 
-// Clique único e limpo para iniciar vídeo e música
+// Tenta colocar o jogo em tela cheia e travar a orientação na horizontal.
+async function prepararTelaDoJogo() {
+    try {
+        if (cenario.requestFullscreen && !document.fullscreenElement) {
+            await cenario.requestFullscreen();
+        }
+
+        if (screen.orientation && screen.orientation.lock) {
+            await screen.orientation.lock('landscape');
+        }
+    } catch (erro) {
+        console.log('Não foi possível ativar a orientação horizontal:', erro);
+    }
+}
+
+// Inicia o jogo
 btnJogar.addEventListener('click', () => {
+    prepararTelaDoJogo();
     telaStart.style.display = 'none';
 
-    // Inicia a música de fundo mais baixa durante a introdução
     if (musicaFundo) {
         musicaFundo.volume = 0.2; 
         musicaFundo.play().catch(() => {});
     }
 
-    // Inicia o vídeo de introdução do zero e com som
     videoIntro.currentTime = 0;
     videoIntro.muted = false;
     videoIntro.play().catch((erro) => {
@@ -53,7 +67,6 @@ function finalizarIntro() {
     videoIntro.pause();
     telaIntro.style.display = 'none';
     
-    // Aumenta o volume da música quando o jogo começa
     if (musicaFundo) {
         musicaFundo.volume = 0.1;
     }
@@ -110,33 +123,29 @@ function verificarColisaoPorta() {
         rectPersonagem.top <= rectPorta.bottom
     ) {
         saiuDoCenario = true;
-        transicao.style.opacity = '1'; // Escurece a tela
+        transicao.style.opacity = '1';
 
         setTimeout(() => {
-            // Troca os cenários
             fundoVideo.style.display = 'none';
             porta.style.display = 'none';
             cena2.style.display = 'block';
 
-            // personagem no canto esquerdo da nova cena
             posX = 100;
             personagem.style.left = posX + 'px';
-            personagem.style.transform = 'scaleX(1)'; // Garante que ela olhe para a direita
+            personagem.style.transform = 'scaleX(1)';
             personagem.style.display = 'block';
 
-            //Clareia a tela e abre o novo balão de fala
             transicao.style.opacity = '0';
             
             textoFala.innerText = "Que....lugar é esse??";
-            balaoFala.style.left = "150px"; // Posição do balão na nova cena
+            balaoFala.style.left = "150px";
             balaoFala.style.display = 'block';
-            emDialogo = true; //Trava a personagem até o jogador fechar o balão
+            emDialogo = true;
         }, 800);
     }
 }
 
 function atualizarJogo() {
-    // Removemos a trava do saiuDoCenario aqui para ela poder andar no Cenário 2 também!
     if (!naIntroducao && !emDialogo) {
         const limiteEsquerdo = 0;
         const limiteDireito = cenario.clientWidth - personagem.clientWidth;
@@ -153,7 +162,6 @@ function atualizarJogo() {
 
         personagem.style.left = posX + 'px';
 
-        // Só verifica a colisão com a porta enquanto ainda estiver no laboratório
         if (!saiuDoCenario) {
             verificarColisaoPorta();
         }
@@ -161,4 +169,5 @@ function atualizarJogo() {
 
     requestAnimationFrame(atualizarJogo);
 }
+
 atualizarJogo();
