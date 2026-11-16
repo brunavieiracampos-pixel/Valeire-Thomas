@@ -16,7 +16,7 @@ const cena2 = document.getElementById('cena2');
 const textoFala = document.getElementById('texto-fala');
 
 let posX = 100;
-const velocidade = 8;
+const velocidade = 4;
 let saiuDoCenario = false;
 let naIntroducao = true;
 let emDialogo = false;
@@ -150,6 +150,19 @@ function finalizarIntro() {
 
 videoIntro.addEventListener('ended', finalizarIntro);
 btnPular.addEventListener('click', finalizarIntro);
+
+let audioEstavaTocando = false;
+
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        audioEstavaTocando = !musicaFundo.paused;
+        musicaFundo.pause();
+        videoIntro.pause();
+    } else if (audioEstavaTocando) {
+        musicaFundo.play().catch(() => {});
+        audioEstavaTocando = false;
+    }
+}
 
 function fecharDialogo() {
     if (!emDialogo) return;
