@@ -214,7 +214,7 @@ balaoFala2.addEventListener('click', fecharDialogo);
 // Configuração do fim do vídeo da Cena 3 (Fora da função de diálogo)
 if (videoCena3) {
     videoCena3.addEventListener('ended', () => {
-        window.location.href = "http://127.0.0.1:5501/"; 
+        window.location.href = "http://127.0.0.1:5500/"; 
     });
 }
 
