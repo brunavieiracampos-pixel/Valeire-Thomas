@@ -25,9 +25,16 @@
         <video id="fundo-video" autoplay loop muted playsinline>
             <source src="laboratorio123.mp4" type="video/mp4">
         </video>
-      <div id="cena2" style="display: none;">
-            <img id="imagem-zoom" src="cenario2.png" alt="Cenário 2">
+
+        <!-- SEGUNDO CENÁRIO -->
+        <div id="cena2" style="display: none;">
+            <img id="imagem" src="cenario2.png" alt="Cenário 2">
+            <img id="coelho" src="coelho.png" alt="Coelho">
+            <div id="balao-fala2" style="display: none;">
+                <p id="texto-fala2"></p>
+            </div>
         </div>
+
         <div id="porta"></div>
         <img id="personagem" src="personagem.png" alt="personagem">
         
@@ -37,7 +44,13 @@
         </div>
 
         <div id="transicao"></div>
-    </div>
+
+        <!-- TERCEIRO CENÁRIO (NOVO) -->
+<div id="cena3" style="display: none;">
+            <video id="video-cena3" autoplay loop muted playsinline>
+                <source src="cena3.mp4" type="video/mp4">
+            </video>
+        </div>
 
     <!-- Áudio de fundo -->
     <audio id="musica-fundo" loop>
