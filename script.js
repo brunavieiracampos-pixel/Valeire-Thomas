@@ -28,6 +28,43 @@ let emDialogo = false;
 let etapaDialogoCena2 = 0; // Controla as falas da cena 2
 let coelhoJaFalou = false; // Garante que o coelho só aborde o jogador 1 vez
 
+// FORÇA O JOGO A SEMPRE COMEÇAR DO ZERO AO RECARREGAR A PÁGINA
+window.addEventListener('DOMContentLoaded', () => {
+    if (telaStart) telaStart.style.display = 'flex';
+    if (telaIntro) telaIntro.style.display = 'none';
+    if (cena2) cena2.style.display = 'none';
+    if (cena3) cena3.style.display = 'none';
+    if (transicao) transicao.style.opacity = '0';
+    if (fundoVideo) fundoVideo.style.display = 'block';
+    if (porta) porta.style.display = 'block';
+    if (coelho) coelho.style.display = 'none';
+    if (balaoFala) balaoFala.style.display = 'none';
+    if (balaoFala2) balaoFala2.style.display = 'none';
+
+    // Para e reseta os vídeos se recarregar a página
+    if (videoIntro) {
+        videoIntro.pause();
+        videoIntro.currentTime = 0;
+    }
+    if (videoCena3) {
+        videoCena3.pause();
+        videoCena3.currentTime = 0;
+    }
+
+    // Reseta todas as variáveis de estado do jogo
+    posX = 100;
+    saiuDoCenario = false;
+    naIntroducao = true;
+    emDialogo = false;
+    etapaDialogoCena2 = 0;
+    coelhoJaFalou = false;
+
+    if (personagem) {
+        personagem.style.left = posX + 'px';
+        personagem.style.display = 'block';
+    }
+});
+
 const teclas = {
     esq: false,
     dir: false
@@ -36,6 +73,7 @@ const teclas = {
 // Clique para iniciar vídeo e música
 btnJogar.addEventListener('click', () => {
     telaStart.style.display = 'none';
+    telaIntro.style.display = 'block'; // Garante que a intro aparece ao clicar em jogar
 
     if (musicaFundo) {
         musicaFundo.volume = 0.2; 
@@ -89,16 +127,14 @@ function fecharDialogo() {
         
         // --- CONVERSA DE PROXIMIDADE COM O COELHO ---
         else if (etapaDialogoCena2 === 2) {
-            // 2ª fala: Protagonista ("Um coelho?")
             balaoFala2.style.display = 'none';
             textoFala.innerText = "Um coelho?";
-            balaoFala.style.left = Math.max(20, posX - 50) + 'px'; // Acompanha a protagonista
+            balaoFala.style.left = Math.max(20, posX - 50) + 'px';
             balaoFala.style.display = 'block';
             etapaDialogoCena2 = 3;
             window.focus();
             return;
         } else if (etapaDialogoCena2 === 3) {
-            // 3ª fala: Coelho ("Você está perdida?")
             balaoFala.style.display = 'none';
             textoFala2.innerText = "Você está perdida?";
             balaoFala2.style.left = (posCoelho - 40) + 'px';
@@ -107,7 +143,6 @@ function fecharDialogo() {
             window.focus();
             return;
         } else if (etapaDialogoCena2 === 4) {
-            // 4ª fala: Protagonista ("Você sabe falar!!?")
             balaoFala2.style.display = 'none';
             textoFala.innerText = "Você sabe falar!!?";
             balaoFala.style.left = Math.max(20, posX - 50) + 'px';
@@ -116,7 +151,6 @@ function fecharDialogo() {
             window.focus();
             return;
         } else if (etapaDialogoCena2 === 5) {
-            // 5ª fala: Coelho ("E por que não saberia?...")
             balaoFala.style.display = 'none';
             textoFala2.innerText = "E por que não saberia? Afinal, o que faz aqui no espaço da linha cronológica?";
             balaoFala2.style.left = (posCoelho - 40) + 'px';
@@ -125,7 +159,6 @@ function fecharDialogo() {
             window.focus();
             return;
         } else if (etapaDialogoCena2 === 6) {
-            // 6ª fala: Protagonista ("Espaço da linha?..")
             balaoFala2.style.display = 'none';
             textoFala.innerText = "Espaço da linha?..";
             balaoFala.style.left = Math.max(20, posX - 50) + 'px';
@@ -134,45 +167,34 @@ function fecharDialogo() {
             window.focus();
             return;
         } else if (etapaDialogoCena2 === 7) {
-            // 7ª fala: Coelho ("vou te explicar melhor!!") e dispara a transição
             balaoFala.style.display = 'none';
             textoFala2.innerText = "vou te explicar melhor!!";
             balaoFala2.style.left = (posCoelho - 40) + 'px';
             balaoFala2.style.display = 'block';
-            etapaDialogoCena2 = 8; // Última etapa antes da transição
+            etapaDialogoCena2 = 8;
             window.focus();
             return;
         } else if (etapaDialogoCena2 === 8) {
             // FECHA O ÚLTIMO BALÃO E FAZ A TRANSIÇÃO PARA A CENA 3
             balaoFala2.style.display = 'none';
             
-            // Ativa o efeito de escurecer a tela
             transicao.style.opacity = '1';
 
             setTimeout(() => {
-                // Esconde a cena 2 e o personagem
                 cena2.style.display = 'none';
                 personagem.style.display = 'none';
                 
-                // Mostra a Cena 3 (vídeo) e força o play para garantir que rode
                 cena3.style.display = 'block';
                 videoCena3.currentTime = 0;
                 videoCena3.play().catch((erro) => {
                     console.log("Erro ao iniciar vídeo da cena 3:", erro);
                 });
 
-                // A música de fundo continua tocando sem ser tocada (nenhum comando pause aqui!)
                 if (musicaFundo) {
-                    musicaFundo.volume = 0.1; // Mantém o volume de fundo agradável
+                    musicaFundo.volume = 0.1; 
                 }
-                videoCena3.addEventListener('ended', () => {
-                   // Redireciona para o outro repositório/projeto
-                window.location.href = "URL_OU_CAMINHO_DO_OUTRO_PROJETO";
-});
 
-                // Clareia a tela de volta
                 transicao.style.opacity = '0';
-                
                 emDialogo = false; 
             }, 800);
 
@@ -185,8 +207,16 @@ function fecharDialogo() {
     balaoFala.style.display = 'none';
     window.focus();
 }
+
 balaoFala.addEventListener('click', fecharDialogo);
 balaoFala2.addEventListener('click', fecharDialogo);
+
+// Configuração do fim do vídeo da Cena 3 (Fora da função de diálogo)
+if (videoCena3) {
+    videoCena3.addEventListener('ended', () => {
+        window.location.href = "http://127.0.0.1:5501/"; 
+    });
+}
 
 // Leitura do teclado
 window.addEventListener('keydown', (event) => {
@@ -264,7 +294,7 @@ function verificarColisaoPorta() {
     }
 }
 
-// função para checar se a protagonista chegou perto do coelho
+// Função para checar se a protagonista chegou perto do coelho
 function verificarProximidadeCoelho() {
     if (!saiuDoCenario || coelhoJaFalou || emDialogo) return;
 
@@ -272,13 +302,12 @@ function verificarProximidadeCoelho() {
         coelhoJaFalou = true; 
         etapaDialogoCena2 = 2; // Inicia a sequência de diálogos perto do coelho
 
-        // 1ª fala: Coelho ("snif*snif*")
         balaoFala.style.display = 'none';
         textoFala2.innerText = "snif*snif*";
         balaoFala2.style.left = (posCoelho - 40) + 'px';
         balaoFala2.style.display = 'block';
 
-        emDialogo = true; // Trava o jogo
+        emDialogo = true; 
     }
 }
 
@@ -302,7 +331,7 @@ function atualizarJogo() {
         if (!saiuDoCenario) {
             verificarColisaoPorta();
         } else {
-            verificarProximidadeCoelho(); // Fica vigiando se chegou perto do coelho
+            verificarProximidadeCoelho(); 
         }
     }
 
