@@ -151,18 +151,31 @@ function finalizarIntro() {
 videoIntro.addEventListener('ended', finalizarIntro);
 btnPular.addEventListener('click', finalizarIntro);
 
-let audioEstavaTocando = false;
+
+let musicaEstavaTocando = false;
+let introEstavaTocando = false;
 
 document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
-        audioEstavaTocando = !musicaFundo.paused;
+        musicaEstavaTocando = !musicaFundo.paused;
+        introEstavaTocando = !videoIntro.paused;
+
         musicaFundo.pause();
         videoIntro.pause();
-    } else if (audioEstavaTocando) {
-        musicaFundo.play().catch(() => {});
-        audioEstavaTocando = false;
+    } else {
+        if (musicaEstavaTocando) {
+            musicaFundo.play().catch(() => {});
+        }
+
+        if (introEstavaTocando && naIntroducao) {
+            videoIntro.play().catch(() => {});
+        }
+
+        musicaEstavaTocando = false;
+        introEstavaTocando = false;
     }
-}
+});
+
 
 function fecharDialogo() {
     if (!emDialogo) return;
