@@ -16,7 +16,7 @@ const cena2 = document.getElementById('cena2');
 const textoFala = document.getElementById('texto-fala');
 
 let posX = 100;
-const velocidade = 4;
+const velocidade = 8;
 let saiuDoCenario = false;
 let naIntroducao = true;
 let emDialogo = false;
@@ -254,5 +254,4 @@ function atualizarJogo() {
 }
 
 atualizarJogo();
-;
 
