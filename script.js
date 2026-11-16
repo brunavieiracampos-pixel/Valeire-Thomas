@@ -73,7 +73,7 @@ const teclas = {
 // Clique para iniciar vídeo e música
 btnJogar.addEventListener('click', () => {
     telaStart.style.display = 'none';
-    telaIntro.style.display = 'block'; // Garante que a intro aparece ao clicar em jogar
+    telaIntro.style.display = 'block'; 
 
     if (musicaFundo) {
         musicaFundo.volume = 0.2; 
