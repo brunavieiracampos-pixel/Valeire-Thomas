@@ -20,7 +20,7 @@ const textoFala = document.getElementById('texto-fala');
 const textoFala2 = document.getElementById('texto-fala2'); 
 
 let posX = 100;      // Posição do personagem 1
-let posCoelho = 1200;// Posição fixa do coelho no cenário 2
+let posCoelho = 750; // Posição fixa do coelho no cenário 2
 const velocidade = 8;
 let saiuDoCenario = false;
 let naIntroducao = true;
